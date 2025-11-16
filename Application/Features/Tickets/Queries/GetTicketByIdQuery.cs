@@ -1,4 +1,4 @@
-﻿using Application.Features.Tickets.Models.Responses;
+﻿using Application.Models.Responses;
 using MediatR;
 
 namespace Application.Features.Tickets.Queries

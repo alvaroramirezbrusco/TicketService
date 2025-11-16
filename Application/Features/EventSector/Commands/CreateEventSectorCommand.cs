@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.EventSeat.Commands
+namespace Application.Features.EventSector.Commands
 {
-    public record CreateEventSeatCommand(EventSeatRequest request) : IRequest<EventSeatsResponse>;
+    public record CreateEventSectorCommand(EventSectorCreateRequest Request) : IRequest<List<EventSectorResponse>>;
 }

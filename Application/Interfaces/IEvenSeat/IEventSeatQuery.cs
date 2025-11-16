@@ -11,6 +11,6 @@ namespace Application.Interfaces.IEvenSeat
     {
         Task<EventSeat?> GetEventSeatById(Guid id);
         Task<List<EventSeat>> GetEventSeatsAllAsync();
-        Task<EventSeat> GetEventSeatsByEventSectorIdAsync(Guid eventId, Guid eventSectorId, long seatId);
+        Task<EventSeat> GetEventSeatByEventSectorIdAsync(Guid? eventId, Guid? eventSectorId, long? seatId);
     }
 }

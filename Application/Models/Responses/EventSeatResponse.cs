@@ -11,9 +11,9 @@ namespace Application.Models.Responses
         public Guid EventSeatId { get; set; }
         public Guid EventId { get; set; }       
         public Guid EventSectorId { get; set; }
-        public long SeatId { get; set; }
+        public long? SeatId { get; set; }
         public Decimal Price { get; set; }
-        public Guid? TicketId { get; set; } 
-        public int StatusId { get; set; }
+        public TicketStatusResponse Status { get; set; }
+        public Guid? ReserverByUserId { get; set; }
     }
 }

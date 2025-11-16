@@ -10,6 +10,7 @@ namespace Application.Interfaces.IEvenSeat
     public interface IEventSeatCommand
     {
         Task InsertEventSeat(EventSeat eventSeat);
+        Task InsertEventSeatRangeAsync(IEnumerable<EventSeat> eventSeats);
         Task UpdateEventSeat(EventSeat evetSeat);
     }
 }

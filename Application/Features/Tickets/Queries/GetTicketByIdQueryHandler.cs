@@ -1,13 +1,8 @@
-﻿using Application.Features.Tickets.Models.Responses;
-using Application.Interfaces.ITicket;
-using Application.Interfaces.ITicketStatus;
+﻿using Application.Interfaces.ITicket;
+using Application.Models.Requests;
 using Application.Models.Responses;
+using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.Tickets.Queries
 {
@@ -32,21 +27,25 @@ namespace Application.Features.Tickets.Queries
                 TicketId = dto.TicketId,
                 UserId = dto.UserId,
                 EventId = dto.EventId,
-                EventSeats = dto.EventSeats.Select(item => new EventSeatResponse
-                {
-                    EventSeatId = item.EventSeatId,
-                    EventSectorId = item.EventSectorId,
-                    SeatId = item.SeatId,
-                    Price = item.Price,
-
-                }).ToList(),
+                Created = dto.Created,
+                Updated = dto.Updated,
                 Status = new TicketStatusResponse
                 {
                     StatusID = dto.StatusRef.StatusID,
                     Name = dto.StatusRef.Name,
                 },
-                Created = dto.Created,
-                Updated = dto.Updated,
+                TicketSeats = dto.TicketSeats.Select(ts => new TicketSeatResponse
+                {
+                    TicketSeatId = ts.TicketSeatId,
+                    TicketId = ts.TicketId,
+                    EventSeatId = ts.EventSeatId,
+                }).ToList(),
+                TicketSectors = dto.TicketSectors.Select(ts => new TicketSectorResponse
+                {
+                    TicketSectorId = ts.TicketSectorId,
+                    TicketId = ts.TicketSectorId,
+                    Quantity = ts.Quantity
+                }).ToList()
             };
         }
     }

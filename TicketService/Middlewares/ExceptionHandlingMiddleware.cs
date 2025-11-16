@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using System.Net;
 using System.Text.Json;
 
 namespace TicketService.Middlewares
@@ -51,7 +52,7 @@ namespace TicketService.Middlewares
             var response = JsonSerializer.Serialize(new
             {
                 status = (int)statusCode,
-                error = errorMessage,
+                //error = errorMessage,
                 detail = exception.Message
             });
 

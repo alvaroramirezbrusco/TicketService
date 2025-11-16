@@ -19,21 +19,33 @@ namespace Infrastructure.Queries
             _context = context;
         }
 
-        public async Task<List<Ticket>> GetTicketAllAsync(Guid? eventId, Guid? userId)
+        public async Task<bool> ExistingTicketById(Guid ticketId)
+        {
+            var exist = await _context.Tickets.AnyAsync(t => t.TicketId == ticketId);
+            if (!exist)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<List<Ticket>> GetTicketAllAsync(Guid? eventId, Guid? UserId)
         {
             var query=  _context.Tickets
                 .Include(t => t.StatusRef)
-                .Include(t => t.EventSeats)
+                .Include(t => t.TicketSeats)
+                    .ThenInclude(ts => ts.EventSeatRef)
+                .Include(t => t.TicketSectors)
+                    .ThenInclude(ts => ts.EventSectorRef)
                 .AsQueryable();
 
             if (eventId.HasValue)
             {
                 query = query.Where(t => t.EventId == eventId.Value);
             }
-
-            if (userId.HasValue)
+            if (UserId.HasValue)
             {
-                query = query.Where(t => t.UserId == userId.Value);
+                query = query.Where(t => t.UserId == UserId.Value);
             }
 
             return await query.ToListAsync();
@@ -43,7 +55,10 @@ namespace Infrastructure.Queries
         {
             return await _context.Tickets
                 .Include(t => t.StatusRef)
-                .Include(t => t.EventSeats)
+                .Include(t => t.TicketSeats)
+                    .ThenInclude(ts => ts.EventSeatRef)
+                .Include(t => t.TicketSectors)
+                    .ThenInclude(ts => ts.EventSectorRef)
                 .FirstOrDefaultAsync(t => t.TicketId == ticketID);
         }
     }

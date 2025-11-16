@@ -1,5 +1,8 @@
 ﻿using Application.Interfaces.IEvenSeat;
+using Application.Interfaces.IEventSector;
 using Application.Interfaces.ITicket;
+using Application.Interfaces.ITicketSeat;
+using Application.Interfaces.ITicketSector;
 using Application.Interfaces.ITicketStatus;
 using Infrastructure.Commands;
 using Infrastructure.Data;
@@ -30,6 +33,16 @@ namespace Infrastructure.DependencyInjection
 
             services.AddScoped<IEventSeatCommand, EventSeatCommand>();
             services.AddScoped<IEventSeatQuery, EventSeatQuery>();
+
+            services.AddScoped<IEventSectorQuery, EventSectorQuery>();
+            services.AddScoped<IEventSectorCommand, EventSectorCommand>();
+
+            services.AddScoped<ITicketSeatCommand, TicketSeatCommand>();
+            services.AddScoped<ITicketSeatQuery, TicketSeatQuery>();
+
+            services.AddScoped<ITicketSectorCommand, TicketSectorCommand>();
+            services.AddScoped<ITicketSectorQuery, TicketSectorQuery>();
+
 
             // cliente HTTP, conexión con servicio externo
 

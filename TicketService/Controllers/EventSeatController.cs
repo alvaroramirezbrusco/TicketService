@@ -18,18 +18,25 @@ namespace TicketService.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateEventSeats(EventSeatRequest request)
+        [HttpPatch]
+        public async Task<IActionResult> UpdateEventSeatStatus(EventSeatUpdateRequest request)
         {
-            var result = await _mediator.Send(new CreateEventSeatCommand(request));
+            var result = await _mediator.Send(new UpdateEventSeatStatusCommand(request));
             return Ok(result);
         }
 
-        [HttpGet]
+        [HttpGet("filter")]
         public async Task<IActionResult> GetEventSeats([FromQuery] Guid eventId, [FromQuery] Guid eventSectorId, [FromQuery] long seatId)
         {
             var item = await _mediator.Send(new GetEventSeatByEventDataQuery(eventId, eventSectorId, seatId));
             return Ok(item);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllEventSeats()
+        {
+            var items = await _mediator.Send(new GetAllEventSeatQuery());
+            return Ok(items);
         }
     }
 }

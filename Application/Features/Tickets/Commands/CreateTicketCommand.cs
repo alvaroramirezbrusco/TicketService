@@ -1,11 +1,6 @@
-﻿using Application.Features.Tickets.Models.Requests;
-using Application.Features.Tickets.Models.Responses;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using Application.Models.Requests;
+using Application.Models.Responses;
 
 namespace Application.Features.Tickets.Commands
 {

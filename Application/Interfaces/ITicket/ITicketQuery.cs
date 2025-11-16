@@ -9,7 +9,8 @@ namespace Application.Interfaces.ITicket
 {
     public interface ITicketQuery
     {
-        Task<List<Ticket>> GetTicketAllAsync(Guid? eventId, Guid? userId);
+        Task<List<Ticket>> GetTicketAllAsync(Guid? eventId, Guid? UserId);
         Task<Ticket?> GetTicketById(Guid ticketID);
+        Task<bool> ExistingTicketById(Guid ticketId);
     }
 }

@@ -13,11 +13,12 @@ namespace Domain.Entities
         public Guid EventSectorId { get; set; }
         public long SeatId { get; set; }
         public Decimal Price { get; set; }
-        public Guid? TicketId { get; set; } = Guid.Empty;
         public int StatusId { get; set; }
+        public Guid? ReservedByUserId { get; set; }
 
         // Relashionsships
-        public Ticket? TicketRef { get; set; }
         public TicketStatus? StatusRef { get; set; }
+        public EventSector? EventSectorRef { get; set; }
+        public ICollection<TicketSeat> TicketSeats { get; set; }
     }
 }

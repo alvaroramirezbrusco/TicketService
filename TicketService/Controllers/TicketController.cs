@@ -1,9 +1,7 @@
 ﻿using Application.Features.Tickets.Commands;
-using Application.Features.Tickets.Models.Requests;
 using Application.Features.Tickets.Queries;
 using Application.Models.Requests;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TicketService.Controllers
@@ -19,7 +17,7 @@ namespace TicketService.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
+        [HttpPost("")]
         public async Task<IActionResult> Create(TicketRequest request)
         {
             var result = await _mediator.Send(new CreateTicketCommand(request));

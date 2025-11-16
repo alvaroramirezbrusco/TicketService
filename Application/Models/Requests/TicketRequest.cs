@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.Tickets.Models.Requests
+namespace Application.Models.Requests
 {
     public class TicketRequest
     {
-        public Guid TicketId { get; set; }
         public Guid UserId { get; set; }
         public Guid EventId { get; set; }
-        public List<SeatTicketRequest>? Seats { get; set; }
+        public List<Guid>? EventSeatIds { get; set; }
+        public List<TicketSectorRequest> Sectors { get; set; }
     }
 }

@@ -1,14 +1,8 @@
-﻿using Application.Features.Tickets.Models.Responses;
-using Application.Interfaces.ITicket;
+﻿using Application.Interfaces.ITicket;
 using Application.Interfaces.ITicketStatus;
 using Application.Models.Responses;
 using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.Tickets.Commands
 {
@@ -25,18 +19,18 @@ namespace Application.Features.Tickets.Commands
             _statusQuery = statusQuery;
         }
 
-        public async Task<TicketResponse> Handle(UpdateTicketCommand request, CancellationToken cancellationToken)
+        public async Task<TicketResponse> Handle(UpdateTicketCommand Request, CancellationToken cancellationToken)
         {
-            var ticket = await _ticketQuery.GetTicketById(request.id);
+            var ticket = await _ticketQuery.GetTicketById(Request.Id);
             if (ticket == null)
             {
-                throw new ArgumentNullException($"El Ticket no existe para el Id ingresado: {request.id}");
+                throw new ArgumentNullException($"El Ticket no existe para el Id ingresado: {Request.Id}");
             }
 
-            var statusRef = await _statusQuery.GetTicketStatusById(request.Request.StatusId);
+            var statusRef = await _statusQuery.GetTicketStatusById(Request.Request.StatusId);
             if (statusRef == null)
             {
-                throw new ArgumentNullException($"El estado no existe para el Id ingresado: {request.id}");
+                throw new ArgumentNullException($"El estado no existe para el Id ingresado: {Request.Id}");
             }
 
             ticket.StatusRef = statusRef;
@@ -49,21 +43,25 @@ namespace Application.Features.Tickets.Commands
                 TicketId = ticket.TicketId,
                 UserId = ticket.UserId,
                 EventId = ticket.EventId,
-                EventSeats = ticket.EventSeats.Select(item => new EventSeatResponse
-                {
-                    EventSeatId = item.EventSeatId,
-                    EventSectorId = item.EventSectorId,
-                    SeatId = item.SeatId,
-                    Price = item.Price,
-
-                }).ToList(),
+                Created = ticket.Created,
+                Updated = ticket.Updated,
                 Status = new TicketStatusResponse
                 {
                     StatusID = ticket.StatusRef.StatusID,
                     Name = ticket.StatusRef.Name,
                 },
-                Created = ticket.Created,
-                Updated = DateTime.UtcNow,
+                TicketSeats = ticket.TicketSeats.Select(ts => new TicketSeatResponse
+                {
+                    TicketSeatId = ts.TicketSeatId,
+                    TicketId = ts.TicketId,
+                    EventSeatId = ts.EventSeatId,
+                }).ToList(),
+                TicketSectors = ticket.TicketSectors.Select(ts => new TicketSectorResponse
+                {
+                    TicketSectorId = ts.TicketSectorId,
+                    TicketId = ts.TicketSectorId,
+                    Quantity = ts.Quantity
+                }).ToList()
             };
         }
     }

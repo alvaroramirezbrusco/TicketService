@@ -1,5 +1,4 @@
-﻿using Application.Models.External.Requests;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.Models.Requests
 {
-    public class EventSeatRequest
+    public class EventSectorCapacityUpdateRequest
     {
-       public EventRequestExternal? Event { get; set; }
+        public bool Reserve { get; set; }
+        public int Quantity { get; set; }
     }
 }

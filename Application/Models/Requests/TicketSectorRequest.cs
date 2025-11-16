@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.Models.Requests
 {
-    public class TicketStatusRequest
+    public class TicketSectorRequest
     {
-        public string Name { get; set; }
+        public Guid EventSectorId { get; set; }
+        public int Quantity { get; set; }
     }
 }

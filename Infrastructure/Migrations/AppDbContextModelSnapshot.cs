@@ -37,22 +37,58 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10,2)");
 
+                    b.Property<Guid?>("ReservedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<long>("SeatId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("TicketId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("EventSeatId");
+
+                    b.HasIndex("EventSectorId");
 
                     b.HasIndex("StatusId");
 
-                    b.HasIndex("TicketId");
-
                     b.ToTable("EventSeat", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.EventSector", b =>
+                {
+                    b.Property<Guid>("EventSectorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsControlled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("ReservedCount")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SectorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SoldCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("EventSectorId");
+
+                    b.ToTable("EventSector", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Ticket", b =>
@@ -83,6 +119,61 @@ namespace Infrastructure.Migrations
                     b.ToTable("Ticket", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.TicketSeat", b =>
+                {
+                    b.Property<Guid>("TicketSeatId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EventSeatId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("EventSeatId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("TicketSeatId");
+
+                    b.HasIndex("EventSeatId");
+
+                    b.HasIndex("EventSeatId1");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("TicketSeat", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.TicketSector", b =>
+                {
+                    b.Property<Guid>("TicketSectorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EventSectorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("EventSectorId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("TicketSectorId");
+
+                    b.HasIndex("EventSectorId");
+
+                    b.HasIndex("EventSectorId1");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("TicketSectors");
+                });
+
             modelBuilder.Entity("Domain.Entities.TicketStatus", b =>
                 {
                     b.Property<int>("StatusID")
@@ -108,7 +199,7 @@ namespace Infrastructure.Migrations
                         new
                         {
                             StatusID = 2,
-                            Name = "Reserverd"
+                            Name = "Reserved"
                         },
                         new
                         {
@@ -124,20 +215,21 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.EventSeat", b =>
                 {
+                    b.HasOne("Domain.Entities.EventSector", "EventSectorRef")
+                        .WithMany("EventSeats")
+                        .HasForeignKey("EventSectorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.TicketStatus", "StatusRef")
                         .WithMany("EventSeats")
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Ticket", "TicketRef")
-                        .WithMany("EventSeats")
-                        .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.Navigation("EventSectorRef");
 
                     b.Navigation("StatusRef");
-
-                    b.Navigation("TicketRef");
                 });
 
             modelBuilder.Entity("Domain.Entities.Ticket", b =>
@@ -151,9 +243,69 @@ namespace Infrastructure.Migrations
                     b.Navigation("StatusRef");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Ticket", b =>
+            modelBuilder.Entity("Domain.Entities.TicketSeat", b =>
+                {
+                    b.HasOne("Domain.Entities.EventSeat", "EventSeatRef")
+                        .WithMany()
+                        .HasForeignKey("EventSeatId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.EventSeat", null)
+                        .WithMany("TicketSeats")
+                        .HasForeignKey("EventSeatId1");
+
+                    b.HasOne("Domain.Entities.Ticket", "TicketRef")
+                        .WithMany("TicketSeats")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EventSeatRef");
+
+                    b.Navigation("TicketRef");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TicketSector", b =>
+                {
+                    b.HasOne("Domain.Entities.EventSector", "EventSectorRef")
+                        .WithMany()
+                        .HasForeignKey("EventSectorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.EventSector", null)
+                        .WithMany("TicketSectors")
+                        .HasForeignKey("EventSectorId1");
+
+                    b.HasOne("Domain.Entities.Ticket", "TicketRef")
+                        .WithMany("TicketSectors")
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EventSectorRef");
+
+                    b.Navigation("TicketRef");
+                });
+
+            modelBuilder.Entity("Domain.Entities.EventSeat", b =>
+                {
+                    b.Navigation("TicketSeats");
+                });
+
+            modelBuilder.Entity("Domain.Entities.EventSector", b =>
                 {
                     b.Navigation("EventSeats");
+
+                    b.Navigation("TicketSectors");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Ticket", b =>
+                {
+                    b.Navigation("TicketSeats");
+
+                    b.Navigation("TicketSectors");
                 });
 
             modelBuilder.Entity("Domain.Entities.TicketStatus", b =>

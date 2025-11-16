@@ -21,21 +21,36 @@ namespace Infrastructure.Queries
 
         public async Task<EventSeat?> GetEventSeatById(Guid id)
         {
-            return await _context.EventSeats.FindAsync(id);
+            return await _context.EventSeats
+                .Include(es => es.StatusRef)
+                .FirstOrDefaultAsync(es => es.EventSeatId == id);
         }
 
         public async Task<List<EventSeat>> GetEventSeatsAllAsync()
         {
-            return await _context.EventSeats.ToListAsync();
+            return await _context.EventSeats
+                .Include(es => es.StatusRef)
+                .ToListAsync();
         }
 
-        public async Task<EventSeat> GetEventSeatsByEventSectorIdAsync(Guid eventId, Guid eventSectorId, long seatId)
+        public async Task<EventSeat> GetEventSeatByEventSectorIdAsync(Guid? eventId, Guid? eventSectorId, long? seatId)
         {
             var query = _context.EventSeats
                 .Include(ES => ES.StatusRef)
                 .AsQueryable();
-            query = query.Where(ES => ES.EventId == eventId && ES.EventSectorId == eventSectorId && ES.SeatId == seatId);
+            if (eventId.HasValue)
+            {
+                query = query.Where(ES => ES.EventId == eventId);
+            }
+            if (eventSectorId.HasValue)
+            {
+                query = query.Where(ES => ES.EventSectorId == eventSectorId);
+            }
+            if (seatId.HasValue)
+            {
+                query = query.Where(ES => ES.SeatId == seatId);
+            }
             return await query.FirstOrDefaultAsync();
-        }
+        }      
     }
 }

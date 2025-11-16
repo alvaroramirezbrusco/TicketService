@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Application.Models.Responses
 {
-    public class EventSeatsResponse
+    public class TicketSectorResponse
     {
-        public string? Message { get; set; }
+        public Guid TicketSectorId { get; set; }
+        public Guid TicketId { get; set; }
+        public int Quantity { get; set; }
     }
 }
